@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>About Danielle Insights | Global Data Architecture & Technical Advisory</title>
+   <meta name="description" content="Learn about Danielle Insights – founded 2010, incorporated 2026. We serve global enterprises with data analytics, SaaS integrations, audits, and talent development.">
+   <!-- Organization Schema -->
+   <script type="application/ld+json">
+   {
+     "@context": "https://schema.org",
+     "@type": "Organization",
+     "name": "Danielle Insights",
+     "url": "https://thedinsights.com",
+     "logo": "https://thedinsights.com/LOGO_Danielle_Insights.webp",
+     "founder": [
+       {"@type": "Person", "name": "Jaison Dani", "jobTitle": "Founder & CEO"},
+       {"@type": "Person", "name": "Jaiganesh Jagannathan", "jobTitle": "Director"}
+     ],
+     "address": [
+       {"@type": "PostalAddress", "streetAddress": "#81, Bazaar Street, Varadharajapuram, Ambattur", "addressLocality": "Chennai", "addressRegion": "Tamil Nadu", "postalCode": "600053", "addressCountry": "IN"},
+       {"@type": "PostalAddress", "streetAddress": "#703, Al Attar Grand Building, Burjuman", "addressLocality": "Dubai", "addressCountry": "AE"}
+     ],
+     "contactPoint": [
+       {"@type": "ContactPoint", "telephone": "+91-8884181800", "contactType": "sales"},
+       {"@type": "ContactPoint", "telephone": "+971-521460654", "contactType": "sales"}
+     ],
+     "sameAs": [
+       "https://www.threads.com/@thedinsights",
+       "http://facebook.com/profile.php?id=61574997722051",
+       "https://www.instagram.com/thedinsights/"
+     ]
+   }
+   </script>
+   <!-- Three.js Library -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+   <style>
+       * { margin: 0; padding: 0; box-sizing: border-box; }
+       body {
+           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;
+           background: linear-gradient(135deg, #e8f0fe 0%, #f4f4f4 50%, #fff0f5 100%);
+           color: #161616;
+           line-height: 1.6;
+           overflow-x: hidden;
+       }
+       a { text-decoration: none; }
+
+       #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+       header, main, footer { position: relative; z-index: 1; }
+
+       header {
+           display: flex; justify-content: space-between; align-items: center;
+           padding: 1rem 5%;
+           background: rgba(255,255,255,0.85);
+           backdrop-filter: blur(10px);
+           border-bottom: 1px solid #e0e0e0;
+           position: sticky; top: 0; z-index: 10;
+       }
+       .logo img { height: 60px; width: auto; }
+       nav a {
+           color: #525252; margin-left: 1.8rem; font-size: 0.9rem; font-weight: 500;
+           transition: color 0.3s, border-bottom 0.3s;
+           padding-bottom: 0.2rem; border-bottom: 2px solid transparent;
+       }
+       nav a:hover, nav a.active { color: #0f62fe; border-bottom-color: #0f62fe; }
+
+       .hero { text-align: center; padding: 3rem 5% 2rem; }
+       .hero .logo-watermark { height: 140px; margin-bottom: 0.8rem; }
+       .hero h1 { font-size: 2.6rem; font-weight: 800; margin-bottom: 0.5rem; }
+       .hero p { font-size: 1.1rem; color: #525252; max-width: 700px; margin: 0 auto; }
+
+       .section-wrapper { max-width: 1200px; margin: 0 auto; padding: 2.5rem 5%; border-bottom: 1px solid #e0e0e0; }
+       .section-header { margin-bottom: 1.5rem; }
+       .section-header .eyebrow { color: #0f62fe; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+       .section-header h2 { font-size: 1.8rem; font-weight: 700; margin: 0.5rem 0; }
+
+       /* Timeline with proper spacing */
+       .timeline { position: relative; padding-left: 2.5rem; max-width: 600px; }
+       .timeline::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #e0e0e0; }
+       .timeline-item { position: relative; margin-bottom: 2rem; padding-bottom: 0.5rem; }
+       .timeline-item::before {
+           content: ""; position: absolute; left: -2.5rem; top: 0.3rem; width: 14px; height: 14px;
+           background: #0f62fe; border-radius: 50%; border: 3px solid #ffffff; box-shadow: 0 0 0 2px #0f62fe;
+       }
+       .timeline-item h3 { font-size: 1.2rem; margin-bottom: 0.3rem; }
+       .timeline-item p { color: #525252; }
+
+       /* Stats */
+       .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.5rem; text-align: center; margin-top: 1.5rem; }
+       .stat { background: rgba(255,255,255,0.9); padding: 1.5rem; border-radius: 10px; border: 1px solid #e0e0e0; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+       .stat h3 { font-size: 2.4rem; color: #0f62fe; margin-bottom: 0.4rem; }
+       .stat p { color: #525252; margin-top: 0.4rem; }
+
+       /* Cards */
+       .grid-matrix { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.8rem; }
+       .card { background: rgba(255,255,255,0.9); border: 1px solid #e0e0e0; padding: 1.8rem; border-radius: 12px; transition: transform 0.3s, box-shadow 0.3s; position: relative; }
+       .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+       .card .icon-animation { position: absolute; top: 10px; right: 10px; width: 70px; height: 70px; opacity: 0.2; pointer-events: none; }
+       .card h3 { font-size: 1.2rem; margin-bottom: 0.6rem; }
+       .card p { color: #525252; font-size: 0.9rem; margin-bottom: 1rem; }
+       .card a { color: #0f62fe; font-weight: 500; }
+
+       .cta-section { text-align: center; padding: 3rem 5%; }
+       .cta-section h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+       .btn-primary { display: inline-block; background: #0f62fe; color: #fff; padding: 0.8rem 2.2rem; border-radius: 6px; font-weight: 600; transition: background 0.2s, transform 0.2s; }
+       .btn-primary:hover { background: #0043ce; transform: translateY(-2px); }
+
+       /* Footer */
+       footer { background: linear-gradient(135deg, #161616 0%, #1a1a1a 100%); color: #a8a8a8; padding: 2.5rem 5% 1rem; border-top: 4px solid #0f62fe; }
+       .footer-cta-strip { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 2rem; flex-wrap: wrap; gap: 1rem; }
+       .footer-cta-strip h3 { color: #fff; font-size: 1.3rem; }
+       .footer-cta-strip a { background: #0f62fe; color: #fff; padding: 0.7rem 1.8rem; border-radius: 6px; font-weight: 600; transition: background 0.2s; }
+       .footer-cta-strip a:hover { background: #0043ce; }
+       .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+       .footer-col h4 { color: #fff; font-size: 1rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+       .footer-col p, .footer-col a { color: #a8a8a8; font-size: 0.9rem; line-height: 1.7; display: block; margin-bottom: 0.5rem; }
+       .footer-col a:hover { color: #0f62fe; }
+       .footer-logo { height: 60px; margin-bottom: 1rem; }
+       .social-links a { display: inline-flex; margin-right: 0.8rem; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.1); align-items: center; justify-content: center; transition: background 0.3s, transform 0.3s; }
+       .social-links a:hover { background: #0f62fe; transform: scale(1.1); }
+       .social-links img { width: 18px; height: 18px; filter: invert(1); }
+       .footer-bottom { text-align: center; border-top: 1px solid #333; padding-top: 1.5rem; margin-top: 2rem; font-size: 0.8rem; }
+       .footer-bottom a { color: #a8a8a8; margin: 0 0.8rem; }
+       .footer-bottom a:hover { color: #0f62fe; }
+
+       @media (max-width: 768px) {
+           header { padding: 0.8rem 3%; }
+           .logo img { height: 50px; }
+           nav a { margin-left: 1rem; font-size: 0.8rem; }
+           .hero h1 { font-size: 2rem; }
+           .hero .logo-watermark { height: 100px; }
+           .section-wrapper { padding: 2rem 3%; }
+           .grid-matrix { gap: 1rem; }
+           .footer-grid { gap: 1rem; }
+           .timeline { padding-left: 2rem; }
+           .timeline-item::before { left: -2rem; }
+       }
+   </style>
+</head>
+<body>
+   <canvas id="bg-canvas"></canvas>
+
+   <header>
+       <div class="logo">
+           <img src="LOGO_Danielle_Insights.webp" alt="Danielle Insights logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+           <span class="logo-fallback" style="display:none; font-size:1.2rem; font-weight:800; text-transform:uppercase; color:#161616;">Danielle Insights</span>
+       </div>
+       <nav>
+           <a href="index.html#analytics">Data Analytics</a>
+           <a href="index.html#saas">Ecosystem Apps</a>
+           <a href="index.html#audits">Technical Audits</a>
+           <a href="index.html#academy">DataVantage Labs</a>
+           <a href="about.html" class="active">About</a>
+       </nav>
+   </header>
+
+   <main>
+       <section class="hero">
+           <img src="LOGO_Danielle_Insights.webp" alt="Danielle Insights logo" class="logo-watermark" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+           <span class="logo-fallback" style="display:none; font-size:3rem; font-weight:800; margin-bottom:1rem;">Danielle Insights</span>
+           <h1>From a Two‑Person Startup to a Global Data Advisory</h1>
+           <p>A decade of engineering intelligent systems.</p>
+       </section>
+
+       <!-- Our Journey – with proper spacing -->
+       <section class="section-wrapper">
+           <div class="section-header">
+               <span class="eyebrow">Our Journey</span>
+               <h2>How It Began</h2>
+           </div>
+           <p style="margin-bottom:2rem;">In 2010, two technologists with a shared obsession for clean architecture began building data systems in a small Chennai office. What started as a passion project evolved into <strong>Danielle Insights</strong>, formally incorporated in 2026. Today we serve enterprises across India, the Middle East, and beyond—delivering analytics, integrations, and audits that move the needle.</p>
+           <div class="timeline">
+               <div class="timeline-item">
+                   <h3>2010 – Inception</h3>
+                   <p>Founded as a technical consultancy in Chennai.</p>
+               </div>
+               <div class="timeline-item">
+                   <h3>2016 – Global Footprint</h3>
+                   <p>Expanded operations to Dubai, serving the Middle East region.</p>
+               </div>
+               <div class="timeline-item">
+                   <h3>2026 – Incorporated</h3>
+                   <p>Formally incorporated as a global entity.</p>
+               </div>
+           </div>
+       </section>
+
+       <!-- Stats (colourful cards) -->
+       <section class="section-wrapper">
+           <div class="stats-grid">
+               <div class="stat" style="background: linear-gradient(135deg, #e0f2fe, #ffffff);">
+                   <h3 class="counter" data-target="15">0+</h3>
+                   <p>Years of Combined Experience</p>
+               </div>
+               <div class="stat" style="background: linear-gradient(135deg, #ffe4e6, #ffffff);">
+                   <h3 class="counter" data-target="43">0+</h3>
+                   <p>Enterprise Projects</p>
+               </div>
+               <div class="stat" style="background: linear-gradient(135deg, #fef3c7, #ffffff);">
+                   <h3 class="counter" data-target="17">0+</h3>
+                   <p>Audits Completed</p>
+               </div>
+               <div class="stat" style="background: linear-gradient(135deg, #d1fae5, #ffffff);">
+                   <h3>🌍 <span class="counter" data-target="2">0</span></h3>
+                   <p>Global Offices</p>
+               </div>
+           </div>
+       </section>
+
+       <!-- Leadership -->
+       <section class="section-wrapper">
+           <div class="section-header">
+               <span class="eyebrow">Leadership</span>
+               <h2>The Minds Behind the Machines</h2>
+           </div>
+           <div class="grid-matrix">
+               <div class="card">
+                   <div class="icon-animation">
+                       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                           <rect x="20" y="20" width="60" height="60" rx="8" fill="none" stroke="#0f62fe" stroke-width="4"/>
+                           <rect x="35" y="35" width="30" height="30" fill="#0f62fe"/>
+                       </svg>
+                   </div>
+                   <h3>Mr. Jaiganesh Jagannathan</h3>
+                   <p><strong>Director</strong><br>Well‑versed in mobile technology and microchip research; leads technical governance.</p>
+                   <a href="/cdn-cgi/l/email-protection#63070a110600170c1123170b06070a0d100a040b17104d000c0e"><span class="__cf_email__" data-cfemail="94f0fde6f1f7e0fbe6d4e0fcf1f0fdfae7fdf3fce0e7baf7fbf9">[email&#160;protected]</span></a>
+               </div>
+               <div class="card">
+                   <div class="icon-animation">
+                       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                           <text x="30" y="60" font-size="40" fill="#0f62fe">&lt;/&gt;</text>
+                       </svg>
+                   </div>
+                   <h3>Mr. Jaison Dani</h3>
+                   <p><strong>Founder & CEO</strong><br>Programmer, developer, and startup enthusiast; drives product vision.</p>
+                   <a href="/cdn-cgi/l/email-protection#f093959fb084989594999e839997988483de939f9d"><span class="__cf_email__" data-cfemail="f89b9d97b88c909d9c91968b919f908c8bd69b9795">[email&#160;protected]</span></a>
+               </div>
+           </div>
+           <p style="margin-top:1rem; font-style:italic; color:#525252;">Both leaders bring deep experience in multilingual, cross‑domain technical environments.</p>
+       </section>
+
+       <!-- Offices -->
+       <section class="section-wrapper">
+           <div class="section-header">
+               <span class="eyebrow">Global Footprint</span>
+               <h2>Where We Operate</h2>
+           </div>
+           <div class="grid-matrix">
+               <div class="card">
+                   <div class="icon-animation">
+                       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#0f62fe"/>
+                           <circle cx="12" cy="9" r="2.5" fill="white"/>
+                       </svg>
+                   </div>
+                   <h3>Chennai HQ</h3>
+                   <p>#81, Bazaar Street, Varadharajapuram, Ambattur – 600053, Chennai, Tamil Nadu</p>
+                   <p><a href="https://wa.me/918884181800">+91-8884181800</a></p>
+               </div>
+               <div class="card">
+                   <div class="icon-animation">
+                       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#0f62fe"/>
+                           <circle cx="12" cy="9" r="2.5" fill="white"/>
+                       </svg>
+                   </div>
+                   <h3>Dubai MEA</h3>
+                   <p>#703, Al Attar Grand Building, Burjuman, Dubai</p>
+                   <p><a href="https://wa.me/971521460654">+971-521460654</a></p>
+               </div>
+           </div>
+       </section>
+
+       <!-- CTA -->
+       <section class="cta-section">
+           <h2>Ready to build something intelligent?</h2>
+           <p style="margin-bottom:1.5rem;">Reach us at <a href="/cdn-cgi/l/email-protection#04676b6a6a61677044706c61606d6a776d636c70772a676b69"><span class="__cf_email__" data-cfemail="6a090504040f091e2a1e020f0e030419030d021e1944090507">[email&#160;protected]</span></a> or via WhatsApp.</p>
+           <a href="/cdn-cgi/l/email-protection#9af9f5f4f4fff9eedaeef2fffef3f4e9f3fdf2eee9b4f9f5f7" class="btn-primary">Start a Conversation</a>
+       </section>
+   </main>
+
+   <footer>
+       <div class="footer-cta-strip">
+           <h3>Ready to transform your data strategy?</h3>
+           <a href="/cdn-cgi/l/email-protection#1b787475757e786f5b6f737e7f727568727c736f6835787476">Get in Touch</a>
+       </div>
+       <div class="footer-grid">
+           <div class="footer-col">
+               <img src="LOGO_Danielle_Insights.webp" alt="Danielle Insights logo" class="footer-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+               <span class="logo-fallback" style="display:none; font-weight:800; color:#fff;">Danielle Insights</span>
+               <p>Danielle Insights is a global data architecture and technical advisory firm serving enterprises since 2010. We deliver analytics, integrations, audits, and talent development.</p>
+               <div class="social-links">
+                   <a href="https://www.threads.com/@thedinsights" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3670/3670226.png" alt="Threads"></a>
+                   <a href="https://facebook.com/profile.php?id=61574997722051&sk=directory_personal_details" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
+                   <a href="https://www.instagram.com/thedinsights/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
+               </div>
+           </div>
+           <div class="footer-col">
+               <h4>Quick Links</h4>
+               <a href="index.html#analytics">Data Analytics</a>
+               <a href="index.html#saas">Ecosystem Apps</a>
+               <a href="index.html#audits">Technical Audits</a>
+               <a href="index.html#academy">DataVantage Labs</a>
+               <a href="about.html">About Us</a>
+           </div>
+           <div class="footer-col">
+               <h4>Contact</h4>
+               <p><strong>Chennai HQ:</strong><br>#81, Bazaar Street, Varadharajapuram, Ambattur – 600053, Chennai, Tamil Nadu<br><a href="https://wa.me/918884181800">+91-8884181800</a></p>
+               <p><strong>Dubai MEA:</strong><br>#703, Al Attar Grand Building, Burjuman, Dubai<br><a href="https://wa.me/971521460654">+971-521460654</a></p>
+               <p><a href="/cdn-cgi/l/email-protection#0d6e626363686e794d7965686964637e646a65797e236e6260"><span class="__cf_email__" data-cfemail="8ae9e5e4e4efe9fecafee2efeee3e4f9e3ede2fef9a4e9e5e7">[email&#160;protected]</span></a></p>
+           </div>
+           <div class="footer-col">
+               <h4>Legal</h4>
+               <p>© 2026 Danielle Insights Pvt. Ltd. All Rights Reserved.</p>
+               <p>DataVantage Labs and associated codebases are licensed assets.</p>
+           </div>
+       </div>
+       <div class="footer-bottom">
+           <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+       </div>
+   </footer>
+
+   <!-- Three.js Interactive Background -->
+   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+       const canvas = document.getElementById('bg-canvas');
+       const scene = new THREE.Scene();
+       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+       const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+       renderer.setSize(window.innerWidth, window.innerHeight);
+       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+       camera.position.z = 10;
+
+       // Contextual icons: microchip, code, data, location pins (no text)
+       const iconShapes = [
+           { geometry: 'box', color: 0x0f62fe },
+           { geometry: 'sphere', color: 0xff6600 },
+           { geometry: 'cone', color: 0x00cc88 },
+           { geometry: 'torus', color: 0x9933ff },
+           { geometry: 'box', color: 0x0f62fe },
+           { geometry: 'sphere', color: 0xff6600 },
+           { geometry: 'cone', color: 0x00cc88 },
+           { geometry: 'torus', color: 0x9933ff }
+       ];
+
+       const objects = [];
+       iconShapes.forEach((item) => {
+           let geom;
+           switch (item.geometry) {
+               case 'box': geom = new THREE.BoxGeometry(0.8, 0.8, 0.8); break;
+               case 'sphere': geom = new THREE.SphereGeometry(0.6, 32, 32); break;
+               case 'cone': geom = new THREE.ConeGeometry(0.5, 1, 32); break;
+               case 'torus': geom = new THREE.TorusGeometry(0.5, 0.2, 16, 32); break;
+           }
+           const mat = new THREE.MeshPhongMaterial({ color: item.color, emissive: item.color, emissiveIntensity: 0.4, transparent: true, opacity: 0.7 });
+           const mesh = new THREE.Mesh(geom, mat);
+           mesh.position.set(
+               (Math.random() - 0.5) * 10,
+               (Math.random() - 0.5) * 7,
+               (Math.random() - 0.5) * 5
+           );
+           mesh.userData = { speed: 0.002 + Math.random() * 0.004, rotSpeed: 0.005 + Math.random() * 0.01 };
+           objects.push(mesh);
+           scene.add(mesh);
+       });
+
+       scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+       const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
+       dirLight.position.set(5, 10, 7);
+       scene.add(dirLight);
+
+       const mouse = { x: 0, y: 0 };
+       document.addEventListener('mousemove', (e) => {
+           mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+           mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+       });
+
+       canvas.addEventListener('click', () => {
+           objects.forEach(obj => {
+               obj.scale.set(1.3, 1.3, 1.3);
+               setTimeout(() => obj.scale.set(1, 1, 1), 300);
+           });
+       });
+
+       function animate() {
+           requestAnimationFrame(animate);
+           objects.forEach(obj => {
+               obj.rotation.x += obj.userData.rotSpeed * (1 + mouse.x * 0.5);
+               obj.rotation.y += obj.userData.rotSpeed * (1 + mouse.y * 0.5);
+               obj.position.y += Math.sin(Date.now() * 0.001 + obj.userData.speed) * 0.003;
+               obj.position.x += Math.cos(Date.now() * 0.001 + obj.userData.speed) * 0.002;
+           });
+           renderer.render(scene, camera);
+       }
+
+       window.addEventListener('resize', () => {
+           camera.aspect = window.innerWidth / window.innerHeight;
+           camera.updateProjectionMatrix();
+           renderer.setSize(window.innerWidth, window.innerHeight);
+       });
+
+       animate();
+   </script>
+
+   <!-- Counter Animation - Reliable version -->
+   <script>
+       (function() {
+           function animateCounter(counter) {
+               var target = parseInt(counter.getAttribute('data-target'), 10);
+               var duration = 1500;
+               var start = 0;
+               var startTime = null;
+               
+               function step(timestamp) {
+                   if (!startTime) startTime = timestamp;
+                   var progress = Math.min((timestamp - startTime) / duration, 1);
+                   var current = Math.floor(progress * target);
+                   counter.textContent = current + (target > 10 ? '+' : '');
+                   
+                   if (progress < 1) {
+                       requestAnimationFrame(step);
+                   } else {
+                       counter.textContent = target + (target > 10 ? '+' : '');
+                   }
+               }
+               
+               requestAnimationFrame(step);
+           }
+           
+           function initCounters() {
+               var counters = document.querySelectorAll('.counter');
+               
+               if (!('IntersectionObserver' in window)) {
+                   counters.forEach(function(counter) {
+                       animateCounter(counter);
+                   });
+                   return;
+               }
+               
+               var observer = new IntersectionObserver(function(entries) {
+                   entries.forEach(function(entry) {
+                       if (entry.isIntersecting) {
+                           animateCounter(entry.target);
+                           observer.unobserve(entry.target);
+                       }
+                   });
+               }, { threshold: 0.3 });
+               
+               counters.forEach(function(counter) {
+                   observer.observe(counter);
+               });
+           }
+           
+           if (document.readyState === 'loading') {
+               document.addEventListener('DOMContentLoaded', initCounters);
+           } else {
+               initCounters();
+           }
+       })();
+   </script>
+</body>
+</html>

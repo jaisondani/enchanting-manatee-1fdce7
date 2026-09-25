@@ -1,0 +1,7 @@
+﻿EMAIL[1]=director@thedinsights.com
+EMAIL[2]=ceo@thedinsights.com
+EMAIL[3]=connect@thedinsights.com
+EMAIL[4]=connect@thedinsights.com
+jaiganesh.webp=DOWNLOADED
+jaisondani.webp=DOWNLOADED
+DONE

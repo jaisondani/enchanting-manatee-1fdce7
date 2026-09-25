@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Danielle Insights | Global Data Architecture & Technical Advisory</title>
+   <meta name="description" content="Empowering global enterprises and SMBs with core data analytics, integrated SaaS systems, data governance audits, and production-grade technical training.">
+   
+   <!-- Organization Schema -->
+   <script type="application/ld+json">
+   {
+     "@context": "https://schema.org",
+     "@type": "Organization",
+     "name": "Danielle Insights",
+     "url": "https://thedinsights.com",
+     "logo": "https://thedinsights.com/LOGO_Danielle_Insights.webp",
+     "address": [
+       {"@type": "PostalAddress", "streetAddress": "#81, Bazaar Street, Varadharajapuram, Ambattur", "addressLocality": "Chennai", "addressRegion": "Tamil Nadu", "postalCode": "600053", "addressCountry": "IN"},
+       {"@type": "PostalAddress", "streetAddress": "#703, Al Attar Grand Building, Burjuman", "addressLocality": "Dubai", "addressCountry": "AE"}
+     ],
+     "contactPoint": [
+       {"@type": "ContactPoint", "telephone": "+91-8884181800", "contactType": "sales"},
+       {"@type": "ContactPoint", "telephone": "+971-521460654", "contactType": "sales"}
+     ],
+     "sameAs": [
+       "https://www.threads.com/@thedinsights",
+       "http://facebook.com/profile.php?id=61574997722051",
+       "https://www.instagram.com/thedinsights/"
+     ]
+   }
+   </script>
+
+   <!-- Three.js Library -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+   <style>
+       * { margin: 0; padding: 0; box-sizing: border-box; }
+       body {
+           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;
+           background: linear-gradient(135deg, #e8f0fe 0%, #f4f4f4 50%, #fff0f5 100%);
+           color: #161616;
+           line-height: 1.6;
+           overflow-x: hidden;
+       }
+       a { text-decoration: none; }
+
+       /* 3D Canvas */
+       #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+       /* Layout */
+       header, main, footer { position: relative; z-index: 1; }
+
+       /* Header */
+       header {
+           display: flex; justify-content: space-between; align-items: center;
+           padding: 1rem 5%;
+           background: rgba(255,255,255,0.85);
+           backdrop-filter: blur(10px);
+           border-bottom: 1px solid #e0e0e0;
+           position: sticky; top: 0; z-index: 10;
+       }
+       .logo img { height: 60px; width: auto; }
+       nav a {
+           color: #525252; margin-left: 1.8rem; font-size: 0.9rem; font-weight: 500;
+           transition: color 0.3s, border-bottom 0.3s;
+           padding-bottom: 0.2rem; border-bottom: 2px solid transparent;
+       }
+       nav a:hover, nav a.active { color: #0f62fe; border-bottom-color: #0f62fe; }
+
+       /* Hero */
+       .hero { padding: 4rem 5% 3rem; max-width: 1200px; margin: 0 auto; text-align: left; }
+       .hero h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 1rem; }
+       .hero p { font-size: 1.1rem; color: #525252; max-width: 700px; margin-bottom: 2rem; }
+       .cta-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+       .btn-primary, .btn-secondary { display: inline-block; padding: 0.8rem 1.8rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+       .btn-primary { background: #0f62fe; color: #fff; box-shadow: 0 4px 12px rgba(15,98,254,0.3); }
+       .btn-primary:hover { background: #0043ce; transform: translateY(-2px); }
+       .btn-secondary { border: 2px solid #0f62fe; color: #0f62fe; background: transparent; }
+       .btn-secondary:hover { background: rgba(15,98,254,0.08); border-color: #0043ce; }
+
+       /* Sections & Cards */
+       .section-container { padding: 3rem 5%; max-width: 1200px; margin: 0 auto; border-bottom: 1px solid #e0e0e0; }
+       .section-title { font-size: 1.7rem; font-weight: 700; margin-bottom: 2rem; }
+       .grid-matrix { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.8rem; }
+       .card {
+           background: rgba(255,255,255,0.9);
+           border: 1px solid #e0e0e0;
+           padding: 2rem;
+           border-radius: 12px;
+           transition: transform 0.3s, box-shadow 0.3s;
+       }
+       .card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+       .card h3 { font-size: 1.2rem; margin-bottom: 0.8rem; }
+       .card p { color: #525252; font-size: 0.9rem; margin-bottom: 1rem; }
+       .card ul { list-style: none; color: #393939; font-size: 0.85rem; }
+       .card ul li { margin-bottom: 0.4rem; padding-left: 1.2rem; position: relative; }
+       .card ul li::before { content: "→"; position: absolute; left: 0; color: #0f62fe; font-weight: 600; }
+
+       /* Footer */
+       footer { background: linear-gradient(135deg, #161616 0%, #1a1a1a 100%); color: #a8a8a8; padding: 2.5rem 5% 1rem; border-top: 4px solid #0f62fe; }
+       .footer-cta-strip { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto 2rem; flex-wrap: wrap; gap: 1rem; }
+       .footer-cta-strip h3 { color: #fff; font-size: 1.3rem; }
+       .footer-cta-strip a { background: #0f62fe; color: #fff; padding: 0.7rem 1.8rem; border-radius: 6px; font-weight: 600; transition: background 0.2s; }
+       .footer-cta-strip a:hover { background: #0043ce; }
+       .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+       .footer-col h4 { color: #fff; font-size: 1rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+       .footer-col p, .footer-col a { color: #a8a8a8; font-size: 0.9rem; line-height: 1.7; display: block; margin-bottom: 0.5rem; }
+       .footer-col a:hover { color: #0f62fe; }
+       .footer-logo { height: 60px; margin-bottom: 1rem; }
+       .social-links a { display: inline-flex; margin-right: 0.8rem; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.1); align-items: center; justify-content: center; transition: background 0.3s, transform 0.3s; }
+       .social-links a:hover { background: #0f62fe; transform: scale(1.1); }
+       .social-links img { width: 18px; height: 18px; filter: invert(1); }
+       .footer-bottom { text-align: center; border-top: 1px solid #333; padding-top: 1.5rem; margin-top: 2rem; font-size: 0.8rem; }
+       .footer-bottom a { color: #a8a8a8; margin: 0 0.8rem; }
+       .footer-bottom a:hover { color: #0f62fe; }
+
+       /* Mobile tweaks */
+       @media (max-width: 768px) {
+           header { padding: 0.8rem 3%; }
+           .logo img { height: 50px; }
+           nav a { margin-left: 1rem; font-size: 0.8rem; }
+           .hero h1 { font-size: 2rem; }
+           .section-container { padding: 2rem 3%; }
+           .grid-matrix { gap: 1rem; }
+           .footer-grid { gap: 1rem; }
+       }
+   </style>
+</head>
+<body>
+   <!-- 3D Background -->
+   <canvas id="bg-canvas"></canvas>
+
+   <header>
+       <div class="logo">
+           <img src="LOGO_Danielle_Insights.webp" alt="Danielle Insights logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+           <span class="logo-fallback" style="display:none; font-size:1.2rem; font-weight:800; text-transform:uppercase; color:#161616;">Danielle Insights</span>
+       </div>
+       <nav>
+           <a href="index.html#analytics">Data Analytics</a>
+           <a href="index.html#saas">Ecosystem Apps</a>
+           <a href="index.html#audits">Technical Audits</a>
+           <a href="index.html#academy">DataVantage Labs</a>
+           <a href="about.html">About</a>
+       </nav>
+   </header>
+
+   <main>
+       <!-- Hero -->
+       <section class="hero">
+           <h1>Advanced Analytics Architecture. Built for Enterprise Growth.</h1>
+           <p>We deploy high-converting data analytics products, engineer secure software integrations, conduct independent infrastructure audits, and cultivate the next generation of data talent.</p>
+           <div class="cta-group">
+               <a href="#analytics" class="btn-primary">View Solutions</a>
+               <a href="https://wa.me" class="btn-secondary">Speak with an Engineer</a>
+           </div>
+       </section>
+
+       <!-- Section 1: Data Analytics -->
+       <section id="analytics" class="section-container">
+           <h2 class="section-title">1. Data Analytics Core</h2>
+           <div class="grid-matrix">
+               <div class="card">
+                   <h3>E-Commerce Multi-Channel Attribution</h3>
+                   <p>Maps the end-to-end user path across social platforms and organic channels to secure a definitive source of marketing metrics truth.</p>
+                   <ul>
+                       <li>Stops conversion ad spend waste</li>
+                       <li>Tracks real-time LTV to CAC patterns</li>
+                       <li>Optimizes raw marketing returns</li>
+                   </ul>
+               </div>
+               <div class="card">
+                   <h3>Retail Inventory Predictive Tracker</h3>
+                   <p>Synchronizes physical point-of-sale datasets with backend logs to automatically map accurate product demand trends.</p>
+                   <ul>
+                       <li>Frees trapped operational cash flow</li>
+                       <li>Eliminates supply chain stockouts</li>
+                       <li>Uncovers hidden retail profit margins</li>
+                   </ul>
+               </div>
+               <div class="card">
+                   <h3>B2B SaaS Churn & Retention Predictor</h3>
+                   <p>Monitors daily account engagement footprints and platform adoption drops to highlight customer contract vulnerabilities.</p>
+                   <ul>
+                       <li>Flags at-risk corporate accounts early</li>
+                       <li>Uncovers clean expansion opportunities</li>
+                       <li>Guides technical product roadmaps</li>
+                   </ul>
+               </div>
+           </div>
+       </section>
+
+       <!-- Section 2: Ecosystem Applications -->
+       <section id="saas" class="section-container">
+           <h2 class="section-title">2. Ecosystem Applications</h2>
+           <div class="grid-matrix">
+               <div class="card">
+                   <h3>Custom Middleware Development</h3>
+                   <p>We build production-grade, highly secure software bridges that consolidate your enterprise applications into a single, unified codebase.</p>
+                   <ul>
+                       <li>Eliminates platform data siloes</li>
+                       <li>Saves hundreds of technical developer hours</li>
+                       <li>Protects internal software architecture scaling</li>
+                   </ul>
+               </div>
+               <div class="card">
+                   <h3>Data Pipeline Integration Tools</h3>
+                   <p>We wrap enterprise third-party ingestion networks directly into your operational systems, cleaning fragmented tech stacks permanently.</p>
+                   <ul>
+                       <li>Consolidates scattered software licensing costs</li>
+                       <li>Guarantees zero-lag database synchronization</li>
+                       <li>Unlocks high-velocity cloud streaming records</li>
+                   </ul>
+               </div>
+           </div>
+       </section>
+
+       <!-- Section 3: Technical Audits & Consulting -->
+       <section id="audits" class="section-container">
+           <h2 class="section-title">3. Technical Audits & Consulting</h2>
+           <div class="grid-matrix">
+               <div class="card">
+                   <h3>Data Governance & DPDPA Compliance</h3>
+                   <p>Comprehensive evaluation of data storage patterns, encryption workflows, and access boundaries under national data sovereignty mandates.</p>
+                   <ul>
+                       <li>Secures 100% compliance consulting alignment</li>
+                       <li>Protects corporate boards from data leaks</li>
+                       <li>Mitigates heavy statutory regulatory liabilities</li>
+                   </ul>
+               </div>
+               <div class="card">
+                   <h3>Cloud Pipeline Infrastructure Optimization</h3>
+                   <p>Deep architectural analysis of query orchestration performance on leading cloud networks to strip out systemic processing lag.</p>
+                   <ul>
+                       <li>Cuts computing overhead costs immediately</li>
+                       <li>Accelerates live analytical processing speed</li>
+                       <li>Establishes clean failover protocols</li>
+                   </ul>
+               </div>
+               <div class="card">
+                   <h3>Blockchain Management & Smart Contract Verification</h3>
+                   <p>Rigorous, independent security auditing of distributed ledger integrations, code dependencies, and data verification logs.</p>
+                   <ul>
+                       <li>Eliminates structural code exploits</li>
+                       <li>Validates absolute ledger immutability proofs</li>
+                       <li>Optimizes transaction data processing</li>
+                   </ul>
+               </div>
+           </div>
+       </section>
+
+       <!-- Section 4: DataVantage Labs -->
+       <section id="academy" class="section-container">
+           <h2 class="section-title">4. DataVantage Labs</h2>
+           <p style="color:#525252; font-style:italic; margin-bottom:2rem;">"Bypassing theory. Building next-gen tech talent."</p>
+           <div class="grid-matrix">
+               <div class="card">
+                   <h3>Student Career Sprints</h3>
+                   <p>Intensive 6-hour data analytics weekend bootcamps designed to push final-year engineering and technical students straight into industry environments.</p>
+                   <ul>
+                       <li>Production-ready Python data science modules</li>
+                       <li>Hands-on global AI framework curriculum</li>
+                       <li>Direct technical placement prep</li>
+                   </ul>
+               </div>
+               <div class="card">
+                   <h3>Institutional Alliances</h3>
+                   <p>Formal campus contracts and Service Level Agreements (SLAs) with premier colleges across Southern India to launch co-branded technical tracks.</p>
+                   <ul>
+                       <li>Operational across South Indian states - TN, KA, TS, AP, Goa, and PY</li>
+                       <li>Elevates verified institutional placement rates</li>
+                       <li>Zero instructional burden on internal college faculty</li>
+                   </ul>
+               </div>
+           </div>
+       </section>
+   </main>
+
+   <!-- Footer -->
+   <footer>
+       <div class="footer-cta-strip">
+           <h3>Ready to transform your data strategy?</h3>
+           <a href="/cdn-cgi/l/email-protection#462529282823253206322e23222f28352f212e32356825292b">Get in Touch</a>
+       </div>
+       <div class="footer-grid">
+           <div class="footer-col">
+               <img src="LOGO_Danielle_Insights.webp" alt="Danielle Insights logo" class="footer-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+               <span class="logo-fallback" style="display:none; font-weight:800; color:#fff;">Danielle Insights</span>
+               <p>Danielle Insights is a global data architecture and technical advisory firm serving enterprises since 2010. We deliver analytics, integrations, audits, and talent development.</p>
+               <div class="social-links">
+                   <a href="https://www.threads.com/@thedinsights" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3670/3670226.png" alt="Threads"></a>
+                   <a href="https://facebook.com/profile.php?id=61574997722051&sk=directory_personal_details" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
+                   <a href="https://www.instagram.com/thedinsights/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram"></a>
+               </div>
+           </div>
+           <div class="footer-col">
+               <h4>Quick Links</h4>
+               <a href="#analytics">Data Analytics</a>
+               <a href="#saas">Ecosystem Apps</a>
+               <a href="#audits">Technical Audits</a>
+               <a href="#academy">DataVantage Labs</a>
+               <a href="about.html">About Us</a>
+           </div>
+           <div class="footer-col">
+               <h4>Contact</h4>
+               <p><strong>Chennai HQ:</strong><br>Bazaar Street, Varadharajapuram, Ambattur – 600053, Chennai, Tamil Nadu<br><a href="https://wa.me/918884181800">+91-8884181800</a></p>
+               <p><strong>Dubai MEA:</strong><br>#703, Al Attar Grand Building, Burjuman, Dubai<br><a href="https://wa.me/971521460654">+971-521460654</a></p>
+               <p><a href="/cdn-cgi/l/email-protection#b0d3dfdeded5d3c4f0c4d8d5d4d9dec3d9d7d8c4c39ed3dfdd"><span class="__cf_email__" data-cfemail="f89b9796969d9b8cb88c909d9c91968b919f908c8bd69b9795">[email&#160;protected]</span></a></p>
+           </div>
+           <div class="footer-col">
+               <h4>Legal</h4>
+               <p>© 2026 Danielle Insights Pvt. Ltd. All Rights Reserved.</p>
+               <p>DataVantage Labs and associated codebases are licensed assets.</p>
+           </div>
+       </div>
+       <div class="footer-bottom">
+           <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+       </div>
+   </footer>
+
+   <!-- Three.js Interactive Background -->
+   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+       const canvas = document.getElementById('bg-canvas');
+       const scene = new THREE.Scene();
+       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+       const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+       renderer.setSize(window.innerWidth, window.innerHeight);
+       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+       camera.position.z = 12;
+
+       // Icon definitions: shapes for C++, Java, .json, Python, Data (no text)
+       const icons = [
+           { shape: 'box', color: 0x0f62fe },   // C++ (blue)
+           { shape: 'sphere', color: 0xff6600 }, // Java (orange)
+           { shape: 'torus', color: 0xffcc00 },  // .json (yellow)
+           { shape: 'sphere', color: 0x00cc88 }, // Python (green)
+           { shape: 'cone', color: 0x9933ff },   // Data (purple)
+           { shape: 'box', color: 0x0f62fe },
+           { shape: 'sphere', color: 0xff6600 },
+           { shape: 'torus', color: 0xffcc00 },
+           { shape: 'sphere', color: 0x00cc88 },
+           { shape: 'cone', color: 0x9933ff }
+       ];
+
+       const objects = [];
+       icons.forEach((item) => {
+           let geometry;
+           switch (item.shape) {
+               case 'box': geometry = new THREE.BoxGeometry(1, 1, 1); break;
+               case 'sphere': geometry = new THREE.SphereGeometry(0.7, 32, 32); break;
+               case 'torus': geometry = new THREE.TorusGeometry(0.6, 0.25, 16, 32); break;
+               case 'cone': geometry = new THREE.ConeGeometry(0.5, 1, 32); break;
+           }
+           const material = new THREE.MeshPhongMaterial({
+               color: item.color,
+               emissive: item.color,
+               emissiveIntensity: 0.3,
+               transparent: true,
+               opacity: 0.8
+           });
+           const mesh = new THREE.Mesh(geometry, material);
+           mesh.position.set(
+               (Math.random() - 0.5) * 12,
+               (Math.random() - 0.5) * 8,
+               (Math.random() - 0.5) * 6
+           );
+           mesh.userData = { speed: 0.002 + Math.random() * 0.004, rotSpeed: 0.005 + Math.random() * 0.01 };
+           objects.push(mesh);
+           scene.add(mesh);
+       });
+
+       // Lighting
+       scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+       const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+       dirLight.position.set(5, 10, 7);
+       scene.add(dirLight);
+
+       // Mouse interaction
+       const mouse = { x: 0, y: 0 };
+       document.addEventListener('mousemove', (e) => {
+           mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+           mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+       });
+
+       // Click pulse
+       canvas.addEventListener('click', () => {
+           objects.forEach(obj => {
+               obj.scale.set(1.4, 1.4, 1.4);
+               setTimeout(() => obj.scale.set(1, 1, 1), 300);
+           });
+       });
+
+       // Animation loop
+       function animate() {
+           requestAnimationFrame(animate);
+           objects.forEach(obj => {
+               obj.rotation.x += obj.userData.rotSpeed * (1 + mouse.x * 0.5);
+               obj.rotation.y += obj.userData.rotSpeed * (1 + mouse.y * 0.5);
+               obj.position.y += Math.sin(Date.now() * 0.001 + obj.userData.speed) * 0.003;
+               obj.position.x += Math.cos(Date.now() * 0.001 + obj.userData.speed) * 0.002;
+           });
+           renderer.render(scene, camera);
+       }
+
+       // Resize
+       window.addEventListener('resize', () => {
+           camera.aspect = window.innerWidth / window.innerHeight;
+           camera.updateProjectionMatrix();
+           renderer.setSize(window.innerWidth, window.innerHeight);
+       });
+
+       animate();
+   </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925" integrity="sha512-d9sL6GJLXn6fInD1+TVXhTcQOsmxeHfmHAvwGDIxp5TO+uo1fiWW7mHomMj4MLRlCsJDTqXzWLHJFFlPCEIj/A==" data-cf-beacon='{"version":"2024.11.0","token":"3e7b25cda5424b51b4ebdf06cfb175e4","r":1}' crossorigin="anonymous"></script>
+</body>
+</html>
