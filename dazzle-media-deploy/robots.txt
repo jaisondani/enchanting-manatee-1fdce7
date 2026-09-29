@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Block admin/temp paths
+Disallow: /admin/
+Disallow: /temp/
+Disallow: /.netlify/
+
+# Sitemap location
+Sitemap: https://dazzlemediagroup.com/sitemap.xml
+
+# Crawl-delay for respectful bots
+Crawl-delay: 1

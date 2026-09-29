@@ -1,0 +1,13 @@
+# Redirect clean URLs to .html files (multi-page setup)
+/signage     /signage.html   301
+/pr          /pr.html        301
+/portfolio   /portfolio.html 301
+/insights    /insights.html  301
+/about       /about.html     301
+/contact     /contact.html   301
+
+# Proxy /api/counter to Netlify Function (keeps URL clean for drag-and-drop deploy)
+/api/counter  /.netlify/functions/counter  200!
+
+# Root serves index.html
+# (Netlify serves /index.html automatically for /)
