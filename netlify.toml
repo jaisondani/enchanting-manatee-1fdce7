@@ -1,5 +1,7 @@
 [build]
+  base = "dazzle-media-deploy"
   publish = "."
+  functions = "netlify/functions"
 
 [[headers]]
   for = "/*"
