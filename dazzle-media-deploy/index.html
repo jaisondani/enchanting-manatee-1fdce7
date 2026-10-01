@@ -392,10 +392,10 @@
         }
 
         /* ---- Carousel ---- */
-        .slider-container { width: 100%; max-width: 1280px; height: min(500px, 56.25vw); min-height: 300px; margin: 0 auto; position: relative; overflow: hidden; padding: 0; border-radius: 16px; background: var(--white); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .slider-container { width: min(100%, 1280px); height: auto; min-height: 0; margin: 0 auto; position: relative; overflow: hidden; padding: 0; border-radius: 16px; background: var(--white); box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: width 0.35s ease, height 0.35s ease; }
         .slider-track { display: flex; width: 100%; height: 100%; transition: transform 0.55s ease; }
-        .slider-slide { width: 100%; height: 100%; flex: 0 0 100%; position: relative; }
-        .slider-slide img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
+        .slider-slide { width: 100%; height: 100%; flex: 0 0 100%; position: relative; overflow: hidden; border-radius: 16px; }
+        .slider-slide img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; border-radius: 16px; background: #f3f3f3; }
         .slider-control { position: absolute; top: 50%; z-index: 2; width: 44px; height: 44px; border: 0; border-radius: 50%; background: rgba(27,42,74,0.86); color: var(--white); font-size: 1.8rem; line-height: 1; transform: translateY(-50%); cursor: pointer; transition: background 0.25s ease, transform 0.25s ease; }
         .slider-control:hover, .slider-control:focus-visible { background: var(--brand-orange, #FF7A00); transform: translateY(-50%) scale(1.06); }
         .slider-control.prev { left: 1rem; }
@@ -403,7 +403,11 @@
         .slider-dots { position: absolute; bottom: 1rem; left: 50%; z-index: 2; display: flex; gap: 0.45rem; transform: translateX(-50%); }
         .slider-dot { width: 10px; height: 10px; padding: 0; border: 1px solid var(--white); border-radius: 50%; background: rgba(255,255,255,0.55); cursor: pointer; }
         .slider-dot.active { background: var(--brand-orange, #FF7A00); }
-        @media (max-width: 767px) { .slider-container { height: min(450px, 65vh); min-height: 340px; } .slider-control { width: 44px; height: 44px; font-size: 1.6rem; } .slider-control.prev { left: 0.6rem; } .slider-control.next { right: 0.6rem; } }
+        @media (max-width: 767px) {
+            .slider-control { width: 44px; height: 44px; font-size: 1.6rem; }
+            .slider-control.prev { left: 0.6rem; }
+            .slider-control.next { right: 0.6rem; }
+        }
 
         /* ---- Image Viewer ---- */
         .zoomable-image { cursor: zoom-in; }
@@ -424,8 +428,9 @@
         .marquee-container::before, .marquee-container::after { content: ''; position: absolute; top: 0; width: 60px; height: 100%; z-index: 2; pointer-events: none; }
         .marquee-container::before { left: 0; background: linear-gradient(to right, var(--bg-light), transparent); }
         .marquee-container::after { right: 0; background: linear-gradient(to left, var(--bg-light), transparent); }
-        .marquee-track { display: flex; gap: 2rem; animation: marqueeScroll 20s linear infinite; width: max-content; align-items: center; }
-        .marquee-track img { height: 50px; width: auto; max-width: 120px; object-fit: contain; filter: grayscale(100%); opacity: 0.6; transition: filter 0.3s, opacity 0.3s, transform 0.3s; }
+        .marquee-track { display: flex; gap: 0; animation: marqueeScroll 20s linear infinite; width: max-content; align-items: center; }
+        .marquee-track img { flex: 0 0 var(--logo-item-width, 120px); height: 50px; width: var(--logo-item-width, 120px); max-width: none; margin-right: var(--logo-gap, 2rem); object-fit: contain; filter: grayscale(100%); opacity: 0.6; transition: filter 0.3s, opacity 0.3s, transform 0.3s; }
+        .marquee-track img:nth-child(10n) { margin-right: 0; }
         .marquee-track img:hover { filter: grayscale(0%); opacity: 1; transform: scale(1.05); }
         @keyframes marqueeScroll { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
         .marquee-container:hover .marquee-track { animation-play-state: paused; }
@@ -572,7 +577,9 @@
         .footer-title { color: var(--brand-gold); margin-bottom: 0.6rem; font-size: 1rem; }
         .footer-links li { margin-bottom: 0.4rem; }
         .footer-links a:hover { color: var(--brand-gold); }
-        .copyright { text-align: center; padding-top: 1rem; border-top: 1px solid #333; color: #888; font-size: 0.8rem; }
+        .copyright { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.35rem 0.6rem; text-align: center; padding-top: 1rem; border-top: 1px solid #333; color: #888; font-size: 0.8rem; }
+        .copyright-group, .copyright-divider { white-space: nowrap; }
+        .copyright-divider { color: #888; }
 
         /* ---- Social Icons ---- */
         .social-icons { display: flex; justify-content: flex-start; gap: 0.8rem; margin-top: 0.6rem; flex-wrap: wrap; }
@@ -734,7 +741,6 @@
             .trust-bar { padding: 0.6rem 0; }
             .trust-grid { font-size: 0.8rem; gap: 0.3rem; flex-direction: column; align-items: center; }
             .trust-grid div { padding: 3px 0; animation: none; }
-            .slider-track img { width: 140px; height: 100px; }
             .grid-2 { grid-template-columns: 1fr; gap: 1.5rem; }
             .section { padding: 1.8rem 0; }
             .card { padding: 1.2rem; }
@@ -978,6 +984,7 @@
         .page-view:not(.about-page) .card-img, .page-view:not(.about-page) .dmg-blog-card > img, .page-view:not(.about-page) .dmg-news-card .card-img-wrap img, .page-view:not(.about-page) .wave-slider-track img, .page-view:not(.about-page) .slider-track img { display: block; width: 100%; object-fit: cover; }
         .page-view:not(.about-page) .card-img, .page-view:not(.about-page) .dmg-blog-card > img { aspect-ratio: 16 / 10; height: auto; }
         .page-view:not(.about-page) .dmg-news-card .card-img-wrap img { height: 100%; }
+        .page-view:not(.about-page) .slider-container .slider-slide img { object-fit: contain; }
         .page-view:not(.about-page) .dmg-logos-grid img, .page-view:not(.about-page) .marquee-track img, .page-view:not(.about-page) .pr-slider-row .pr-track img { object-fit: contain; border-radius: 16px; filter: grayscale(100%); transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease; }
         .page-view:not(.about-page) .dmg-logos-grid img:hover, .page-view:not(.about-page) .marquee-track img:hover, .page-view:not(.about-page) .pr-slider-row .pr-track img:hover { filter: grayscale(0%); opacity: 1; }
         .hero, .hero-top { min-height: 60vh; }
@@ -1398,35 +1405,41 @@
         .visitors-counter {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-left: 1.5rem;
+            gap: 0.4rem;
+            margin: 0;
             font-size: 0.8rem;
         }
-        .visitors-counter .visitor-btn {
-            width: 16px;
-            height: 16px;
+        .online-indicator {
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: #25d366;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            display: inline-block;
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(33, 211, 102, 0.4);
-            animation: pulse-green 2s infinite;
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.16), 0 0 9px rgba(37, 211, 102, 0.75);
+            animation: online-indicator-blink 1.2s steps(1, end) infinite;
         }
         .visitors-counter .visitor-count {
             font-weight: 700;
             color: var(--white);
             font-variant-numeric: tabular-nums;
-            min-width: 80px;
-            text-align: left;
+            text-align: center;
         }
-        @keyframes pulse-green {
-            0%, 100% { box-shadow: 0 2px 8px rgba(37, 211, 102, 0.4); }
-            50% { box-shadow: 0 0 12px rgba(37, 211, 102, 0.8); }
+        @keyframes online-indicator-blink {
+            0%, 49% {
+                opacity: 1;
+                background: #25d366;
+                box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.16), 0 0 9px rgba(37, 211, 102, 0.75);
+            }
+            50%, 100% {
+                opacity: 0.35;
+                background: #14532d;
+                box-shadow: 0 0 0 1px rgba(37, 211, 102, 0.12);
+            }
         }
         @media (max-width: 768px) {
-            .visitors-counter { margin-left: 0; margin-top: 0.5rem; }
+            .copyright { gap: 0.3rem 0.45rem; }
+            .visitors-counter { margin: 0; }
         }
 
     </style>
@@ -1744,12 +1757,18 @@
                     </div>
                 </div>
             </div>
-                        <div class="copyright" style="display:flex;align-items:center;flex-wrap:wrap;">
-            <div class="visitors-counter">
-                <span class="visitor-btn" aria-hidden="true"></span>
-                <span class="visitor-count" id="visitorCount">230</span> visitors served
-            </div>
-&copy; 2026 Dazzle Media Group, Bengaluru. All Rights Reserved. | <a href="#" class="privacy-link-footer" onclick="openPrivacyPolicy(); return false;" style="color:var(--brand-gold); text-decoration:none;">Privacy Policy</a></div>
+        <div class="copyright">
+            <span class="online-indicator" role="img" aria-label="Online"></span>
+            <span class="copyright-divider" aria-hidden="true">||</span>
+            <span class="copyright-group visitors-counter"><span><span class="visitor-count" id="visitorCount" aria-live="polite">230</span> visitors served</span></span>
+            <span class="copyright-divider" aria-hidden="true">||</span>
+            <span class="copyright-group">&copy; 2026 Dazzle Media Group, Bengaluru.</span>
+            <span class="copyright-divider" aria-hidden="true">||</span>
+            <span class="copyright-group">All Rights Reserved.</span>
+            <span class="copyright-divider" aria-hidden="true">||</span>
+            <a class="copyright-group privacy-link-footer" href="#" onclick="openPrivacyPolicy(); return false;" style="color:var(--brand-gold); text-decoration:none;">Privacy Policy</a>
+            <span class="copyright-divider" aria-hidden="true">||</span>
+        </div>
         </div>
     </footer>
 
@@ -2016,6 +2035,7 @@
                 var track = document.getElementById('sliderTrack');
                 if (track) {
                     var imagePaths = finalSequence;
+                    var sliderContainer = track.closest('.slider-container');
                     var dots = document.getElementById('sliderDots');
                     var previousButton = document.getElementById('sliderPrev');
                     var nextButton = document.getElementById('sliderNext');
@@ -2023,9 +2043,23 @@
                     var autoplayTimer;
                     track.innerHTML = imagePaths.map(function(src, index) { return '<div class="slider-slide"><img src="' + src + '" alt="Dazzle Media Work ' + (index + 1) + '" loading="lazy"></div>'; }).join('');
                     dots.innerHTML = imagePaths.map(function(src, index) { return '<button class="slider-dot' + (index === 0 ? ' active' : '') + '" type="button" aria-label="Show image ' + (index + 1) + '" data-slide="' + index + '"></button>'; }).join('');
+                    function fitSlideToImage(index) {
+                        var slideImage = track.children[index].querySelector('img');
+                        function updateHeight() {
+                            if (currentSlide !== index || !slideImage.naturalWidth || !sliderContainer) return;
+                            var availableWidth = Math.min(sliderContainer.parentElement.clientWidth, 1280);
+                            var maxHeight = Math.min(window.innerHeight * (window.innerWidth < 768 ? 0.78 : 0.9), 900);
+                            var scale = Math.min(availableWidth / slideImage.naturalWidth, maxHeight / slideImage.naturalHeight);
+                            sliderContainer.style.width = slideImage.naturalWidth * scale + 'px';
+                            sliderContainer.style.height = slideImage.naturalHeight * scale + 'px';
+                        }
+                        if (slideImage.complete) updateHeight();
+                        else slideImage.addEventListener('load', updateHeight, { once: true });
+                    }
                     function showSlide(index) {
                         currentSlide = (index + imagePaths.length) % imagePaths.length;
                         track.style.transform = 'translateX(-' + (currentSlide * 100) + '%)';
+                        fitSlideToImage(currentSlide);
                         dots.querySelectorAll('.slider-dot').forEach(function(dot, dotIndex) {
                             dot.classList.toggle('active', dotIndex === currentSlide);
                             dot.setAttribute('aria-current', dotIndex === currentSlide ? 'true' : 'false');
@@ -2037,6 +2071,7 @@
                     dots.addEventListener('click', function(event) { var dot = event.target.closest('.slider-dot'); if (!dot) return; showSlide(Number(dot.getAttribute('data-slide'))); restartAutoplay(); });
                     track.parentElement.addEventListener('mouseenter', function() { clearInterval(autoplayTimer); });
                     track.parentElement.addEventListener('mouseleave', restartAutoplay);
+                    window.addEventListener('resize', function() { fitSlideToImage(currentSlide); });
                     showSlide(0);
                     restartAutoplay();
                 }
@@ -2047,6 +2082,15 @@
                     var logoHtml = '';
                     logos.forEach(function(src) { logoHtml += '<img src="' + src + '" alt="Client Logo" loading="lazy">'; });
                     logoTrack.innerHTML = logoHtml + logoHtml;
+                    var logoViewport = logoTrack.parentElement;
+                    function sizeClientLogoSlides() {
+                        var styles = window.getComputedStyle(logoTrack);
+                        var gap = parseFloat(styles.getPropertyValue('--logo-gap')) * parseFloat(window.getComputedStyle(document.documentElement).fontSize);
+                        var itemWidth = Math.max(0, (logoViewport.clientWidth - gap * 3) / 4);
+                        logoTrack.style.setProperty('--logo-item-width', itemWidth + 'px');
+                    }
+                    sizeClientLogoSlides();
+                    window.addEventListener('resize', sizeClientLogoSlides);
                 }
 
                 var aboutBrandLogoTrack = document.getElementById('aboutBrandLogoTrack');
@@ -2392,14 +2436,14 @@
                    ★★★ SPECIAL OFFER BANNER SLIDER ★★★
                    ============================================================ */
                 var offerBanners = [
-                    { src: '8_Dazzlemedia_Epoxy_3D_signage.webp', alt: 'Epoxy 3D Signage Offer — Dazzle Media Group', title: 'Epoxy 3D Signage', description: 'Durable epoxy 3D lettering for commercial branding. Weather-resistant, UV-stable.', price: 'Rs. 850 Only', originalPrice: 'Rs. 1,100' },
-                    { src: '7_Lolipop_Flange_DazzleMedia.webp', alt: 'Lollipop Flange Offer — Dazzle Media Group', title: 'Lollipop Flange', description: 'Eye-catching lollipop flange signs for outdoor advertising and wayfinding.', price: 'Rs. 1,499 Only', originalPrice: 'Rs. 2,450' },
-                    { src: '6_Epoxy_3D_Signage_DazzleMedia.webp', alt: 'Epoxy 3D Signage Offer — Dazzle Media Group', title: 'Epoxy 3D Signage', description: 'High-impact epoxy 3D signage for maximum brand visibility.', price: 'Rs. 850 Only', originalPrice: 'Rs. 1,050' },
-                    { src: '5_Dazzlemedia_Lollipop_Flange.webp', alt: 'Lollipop Flange Offer — Dazzle Media Group', title: 'Lollipop Flange', description: 'Premium lollipop flange displays for promotional branding.', price: 'Rs. 1,499 Only', originalPrice: 'Rs. 2,300' },
-                    { src: '4_Dazzlemedia_3D_acrylic_Boards.webp', alt: '3D Acrylic Boards Offer — Dazzle Media Group', title: '3D Acrylic Boards', description: 'Custom 3D acrylic boards with backlighting for premium visual impact.', price: 'Rs. 450 Only', originalPrice: 'Rs. 850' },
-                    { src: '3_Dazzlemedia_Epoxy_3D_signage.webp', alt: 'Epoxy 3D Signage Offer — Dazzle Media Group', title: 'Epoxy 3D Signage', description: 'Professional-grade epoxy 3D signage for retail and commercial spaces.', price: 'Rs. 850 Only', originalPrice: 'Rs. 1,050' },
-                    { src: '2_Dazzlemedia_Clip_on_Board.webp', alt: 'Clip-on Board Offer — Dazzle Media Group', title: 'Clip-on Board', description: 'Modern clip-on display boards perfect for menus and directories.', price: 'Rs. 1,499 Only', originalPrice: 'Rs. 2,100' },
-                    { src: '1_Dazzlemedia_3D_acrylic.webp', alt: '3D Acrylic Signage Offer — Dazzle Media Group', title: '3D Acrylic Signage', description: 'Premium 3D acrylic lettering for storefronts and corporate offices.', price: 'Rs. 450 Only', originalPrice: 'Rs. 850' }
+                    { src: '/8_Dazzlemedia_Epoxy_3D_signage.png', alt: 'Epoxy 3D Signage Offer — Dazzle Media Group', title: 'Epoxy 3D Signage', description: 'Durable epoxy 3D lettering for commercial branding. Weather-resistant, UV-stable.', price: 'Rs. 850 Only', originalPrice: 'Rs. 1,100' },
+                    { src: '/7_Lolipop_Flange_DazzleMedia.webp', alt: 'Lollipop Flange Offer — Dazzle Media Group', title: 'Lollipop Flange', description: 'Eye-catching lollipop flange signs for outdoor advertising and wayfinding.', price: 'Rs. 1,499 Only', originalPrice: 'Rs. 2,450' },
+                    { src: '/6_Epoxy_3D_Signage_DazzleMedia.webp', alt: 'Epoxy 3D Signage Offer — Dazzle Media Group', title: 'Epoxy 3D Signage', description: 'High-impact epoxy 3D signage for maximum brand visibility.', price: 'Rs. 850 Only', originalPrice: 'Rs. 1,050' },
+                    { src: '/5_Dazzlemedia_Lollipop_Flange.webp', alt: 'Lollipop Flange Offer — Dazzle Media Group', title: 'Lollipop Flange', description: 'Premium lollipop flange displays for promotional branding.', price: 'Rs. 1,499 Only', originalPrice: 'Rs. 2,300' },
+                    { src: '/4_Dazzlemedia_3D_acrylic_Boards.webp', alt: '3D Acrylic Boards Offer — Dazzle Media Group', title: '3D Acrylic Boards', description: 'Custom 3D acrylic boards with backlighting for premium visual impact.', price: 'Rs. 450 Only', originalPrice: 'Rs. 850' },
+                    { src: '/3_Dazzlemedia_Epoxy_3D_signage.webp', alt: 'Epoxy 3D Signage Offer — Dazzle Media Group', title: 'Epoxy 3D Signage', description: 'Professional-grade epoxy 3D signage for retail and commercial spaces.', price: 'Rs. 850 Only', originalPrice: 'Rs. 1,050' },
+                    { src: '/2_Dazzlemedia_Clip_on_Board.webp', alt: 'Clip-on Board Offer — Dazzle Media Group', title: 'Clip-on Board', description: 'Modern clip-on display boards perfect for menus and directories.', price: 'Rs. 1,499 Only', originalPrice: 'Rs. 2,100' },
+                    { src: '/1_Dazzlemedia_3D_acrylic.webp', alt: '3D Acrylic Signage Offer — Dazzle Media Group', title: '3D Acrylic Signage', description: 'Premium 3D acrylic lettering for storefronts and corporate offices.', price: 'Rs. 450 Only', originalPrice: 'Rs. 850' }
                 ];
 
                 function initOfferSlider(cfg) {
@@ -2626,7 +2670,11 @@
         var countEl = document.getElementById('visitorCount');
         if (!countEl) return;
         function animateCount(el, newValue) {
-            var start = parseInt(el.textContent, 10) || 230;
+            var start = parseInt(el.textContent, 10);
+            if (!Number.isSafeInteger(start)) {
+                el.textContent = newValue;
+                return;
+            }
             var duration = 1200;
             var startTime = null;
             function step(timestamp) {
@@ -2639,23 +2687,21 @@
             requestAnimationFrame(step);
         }
         fetch('/api/counter')
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                if (data && typeof data.count === 'number') {
-                    animateCount(countEl, data.count);
-                    setInterval(function() {
-                        var current = parseInt(countEl.textContent, 10);
-                        if (!isNaN(current)) animateCount(countEl, current + Math.floor(Math.random() * 2) + 1);
-                    }, 4000);
+            .then(function(response) {
+                if (!response.ok) throw new Error('Visitor counter request failed with status ' + response.status);
+                if (!(response.headers.get('content-type') || '').toLowerCase().includes('application/json')) {
+                    throw new Error('Visitor counter endpoint did not return JSON; the Netlify Function may not be deployed');
                 }
+                return response.json();
             })
-            .catch(function() {
-                var count = 230;
-                countEl.textContent = count;
-                setInterval(function() {
-                    count += Math.floor(Math.random() * 2) + 1;
-                    countEl.textContent = count;
-                }, 4000);
+            .then(function(data) {
+                if (!data || !Number.isSafeInteger(data.count) || data.count < 0) {
+                    throw new Error('Visitor counter returned an invalid count');
+                }
+                animateCount(countEl, data.count);
+            })
+            .catch(function(error) {
+                console.error('Unable to load the visitor counter:', error);
             });
     })();
     </script>
