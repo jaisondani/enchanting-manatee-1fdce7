@@ -25,14 +25,16 @@ function jsonResponse(statusCode, body) {
   };
 }
 
-async function incrementCounter(store) {
+async function incrementCounter(store, setStage) {
   for (let attempt = 0; attempt < MAX_WRITE_ATTEMPTS; attempt += 1) {
+    setStage("blob-read");
     const entry = await store.getWithMetadata(COUNTER_KEY, {
       consistency: "strong",
       type: "json",
     });
 
     if (entry === null) {
+      setStage("blob-write");
       const result = await store.setJSON(
         COUNTER_KEY,
         BASELINE + 1,
@@ -52,6 +54,7 @@ async function incrementCounter(store) {
         throw new Error("Stored visitor count exceeds the safe integer range");
       }
 
+      setStage("blob-write");
       const result = await store.setJSON(
         COUNTER_KEY,
         nextCount,
@@ -66,6 +69,7 @@ async function incrementCounter(store) {
     });
   }
 
+  setStage("retry-limit");
   throw new Error("Could not update visitor count after repeated concurrent writes");
 }
 
@@ -76,12 +80,25 @@ exports.handler = async (event) => {
     return jsonResponse(405, { error: "Method not allowed" });
   }
 
+  let stage = "lambda-context";
   try {
-    connectLambda(event);
-    const count = await incrementCounter(getStore(STORE_NAME));
+    if (typeof event.blobs === "string" && event.headers && typeof event.headers === "object") {
+      const headers = Object.fromEntries(
+        Object.entries(event.headers).map(([name, value]) => [name.toLowerCase(), value]),
+      );
+      connectLambda({ blobs: event.blobs, headers });
+    }
+    stage = "open-store";
+    const store = getStore(STORE_NAME);
+    const count = await incrementCounter(store, (nextStage) => {
+      stage = nextStage;
+    });
     return jsonResponse(200, { count });
   } catch (error) {
-    console.error("Visitor counter update failed:", error);
-    return jsonResponse(503, { error: "Visitor counter is temporarily unavailable" });
+    console.error("Visitor counter update failed during " + stage + ":", error);
+    return jsonResponse(503, {
+      error: "Visitor counter is temporarily unavailable",
+      stage,
+    });
   }
 };
