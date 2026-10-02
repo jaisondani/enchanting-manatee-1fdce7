@@ -1766,7 +1766,7 @@
             <span class="copyright-divider" aria-hidden="true">||</span>
             <span class="copyright-group">All Rights Reserved.</span>
             <span class="copyright-divider" aria-hidden="true">||</span>
-            <a class="copyright-group privacy-link-footer" href="#" onclick="openPrivacyPolicy(); return false;" style="color:var(--brand-gold); text-decoration:none;">Privacy Policy</a>
+            <a class="copyright-group privacy-link-footer" href="#privacyPolicyModal" onclick="openPrivacyPolicy(); return false;" style="color:var(--brand-gold); text-decoration:none;">Privacy Policy</a>
             <span class="copyright-divider" aria-hidden="true">||</span>
         </div>
         </div>
@@ -1806,29 +1806,42 @@
                 <button class="privacy-modal-close" type="button" aria-label="Close privacy policy" onclick="closePrivacyPolicy()">×</button>
             </div>
             <div class="privacy-modal-body">
-                <h4>Information We Collect</h4>
-                <p>When you submit an inquiry through our contact form, we collect your full name, company name, phone number, email address, and any additional information you provide in your message.</p>
+                <p><strong>Effective Date:</strong> 02-10-2026</p>
+                <p>At <strong>Dazzle Media Group</strong>, we value your privacy and are committed to protecting your personal data. This policy outlines how we handle the information you provide to us.</p>
 
-                <h4>How We Use Your Information</h4>
-                <p>We use the information you provide solely to:</p>
+                <h4>1. Information We Collect</h4>
+                <p>We collect personal information that you voluntarily provide to us when you interact with our website. This includes:</p>
                 <ul>
-                    <li>Respond to your inquiry and schedule consultations</li>
-                    <li>Provide quotes for our signage and PR services</li>
-                    <li>Communicate project updates and deliverables</li>
-                    <li>Send you relevant marketing materials (only if you opt in)</li>
+                    <li><strong>Name</strong></li>
+                    <li><strong>Email Address</strong></li>
+                    <li><strong>Phone Number</strong></li>
                 </ul>
 
-                <h4>Data Retention & Security</h4>
-                <p>We retain your information for as long as necessary to fulfill your request and for legitimate business purposes. All data is stored securely and is not shared with third parties without your consent, except as required by law.</p>
+                <h4>2. How We Collect Your Data</h4>
+                <p>We collect this information when you:</p>
+                <ul>
+                    <li>Fill out a form on our website.</li>
+                    <li>Interact with our AI Chat feature.</li>
+                    <li>Send us a message via the WhatsApp widget.</li>
+                </ul>
 
-                <h4>Your Rights</h4>
-                <p>You have the right to access, correct, or delete your personal information at any time. To exercise these rights, please contact us at <a href="mailto:connect@dazzlemediagroup.com" style="color:var(--brand-teal);">connect@dazzlemediagroup.com</a>.</p>
+                <h4>3. How We Protect Your Data</h4>
+                <p>Your data security is our priority. Unlike many agencies, we do not outsource your data to third-party vendors. We maintain a secure internal ecosystem to protect your details, which includes:</p>
+                <ul>
+                    <li><strong>Our Own SEO Team:</strong> Managing data integrity and traffic security.</li>
+                    <li><strong>Our Own Data Centre:</strong> Secure servers for data storage.</li>
+                    <li><strong>Our Own CRM System:</strong> Internal Customer Relationship Management to ensure your details are accessed only by authorized Dazzle Media Group personnel.</li>
+                </ul>
 
-                <h4>Cookies & Analytics</h4>
-                <p>This website uses Google Analytics to understand how visitors interact with our content. Google Analytics uses cookies that do not identify individual users. You can disable cookies in your browser settings.</p>
+                <h4>4. Data Sharing</h4>
+                <p>We do not sell, trade, or rent your personal information to outside parties. Your data is strictly used to communicate with you regarding our services and is contained entirely within our proprietary systems.</p>
 
-                <h4>Changes to This Policy</h4>
-                <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated effective date.</p>
+                <h4>5. Your Rights</h4>
+                <p>You may request to access, correct, or delete your personal information at any time by contacting us directly.</p>
+
+                <h4>6. Contact Us</h4>
+                <p>If you have questions about this policy, please contact us at:</p>
+                <p><a href="mailto:pr@dazzlemediagroup.com" style="color:var(--brand-teal);">pr@dazzlemediagroup.com</a></p>
             </div>
             <div class="privacy-modal-footer">
                 <button class="privacy-modal-close" type="button" onclick="closePrivacyPolicy()" style="font-size:1rem; padding:6px 20px;">Close</button>
@@ -1840,12 +1853,16 @@
         <button class="image-lightbox-close" type="button" aria-label="Close enlarged image">&times;</button>
         <img id="image-lightbox-preview" src="" alt="">
     </div><script>
+        var privacyPolicyLastFocusedElement = null;
         function openPrivacyPolicy() {
             var modal = document.getElementById('privacyPolicyModal');
             if (modal) {
+                privacyPolicyLastFocusedElement = document.activeElement;
                 modal.classList.add('open');
                 modal.setAttribute('aria-hidden', 'false');
                 document.body.classList.add('privacy-modal-open');
+                var closeButton = modal.querySelector('.privacy-modal-close');
+                if (closeButton) closeButton.focus();
             }
         }
         function closePrivacyPolicy() {
@@ -1854,12 +1871,64 @@
                 modal.classList.remove('open');
                 modal.setAttribute('aria-hidden', 'true');
                 document.body.classList.remove('privacy-modal-open');
+                if (privacyPolicyLastFocusedElement) privacyPolicyLastFocusedElement.focus();
+                privacyPolicyLastFocusedElement = null;
             }
         }
-                    preview.addEventListener('click', function(event) { event.stopPropagation(); lightbox.classList.toggle('zoomed'); });
+        document.addEventListener('click', function(event) {
+            if (event.target === document.getElementById('privacyPolicyModal')) closePrivacyPolicy();
+        });
+        document.addEventListener('keydown', function(event) {
+            var modal = document.getElementById('privacyPolicyModal');
+            if (event.key === 'Escape' && modal && modal.classList.contains('open')) closePrivacyPolicy();
+        });
+        (function() {
+            var lightbox = document.getElementById('image-lightbox');
+            var preview = document.getElementById('image-lightbox-preview');
+            var closeButton = lightbox && lightbox.querySelector('.image-lightbox-close');
+            var lastFocusedElement = null;
+            if (!lightbox || !preview || !closeButton) return;
+
+            function closeLightbox() {
+                lightbox.classList.remove('open', 'zoomed');
+                lightbox.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('image-viewer-open');
+                preview.removeAttribute('src');
+                preview.alt = '';
+                if (lastFocusedElement) lastFocusedElement.focus();
+                lastFocusedElement = null;
+            }
+
+            function openLightbox(image) {
+                lastFocusedElement = image;
+                preview.src = image.currentSrc || image.src;
+                preview.alt = image.alt || '';
+                lightbox.classList.add('open');
+                lightbox.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('image-viewer-open');
+                closeButton.focus();
+            }
+
+            function markZoomableImages() {
+                document.querySelectorAll('img:not(#image-lightbox-preview)').forEach(function(image) {
+                    image.classList.add('zoomable-image');
+                    if (image.dataset.lightboxBound) return;
+                    image.dataset.lightboxBound = 'true';
+                    image.addEventListener('click', function() { openLightbox(image); });
+                });
+            }
+
+            preview.addEventListener('click', function(event) {
+                event.stopPropagation();
+                lightbox.classList.toggle('zoomed');
+            });
             closeButton.addEventListener('click', closeLightbox);
-            lightbox.addEventListener('click', function(event) { if (event.target === lightbox) closeLightbox(); });
-            document.addEventListener('keydown', function(event) { if (event.key === 'Escape') closeLightbox(); });
+            lightbox.addEventListener('click', function(event) {
+                if (event.target === lightbox) closeLightbox();
+            });
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+            });
             markZoomableImages();
             new MutationObserver(markZoomableImages).observe(document.body, { childList: true, subtree: true });
         })();

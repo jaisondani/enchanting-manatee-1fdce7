@@ -2,7 +2,7 @@
 // GET /api/counter displays and increments the counter on the home page.
 // POST /api/counter increments it for visits to other pages.
 
-const { getStore } = require("@netlify/blobs");
+const { connectLambda, getStore } = require("@netlify/blobs");
 
 const BASELINE = 230;
 const STORE_NAME = "dazzle-site-metrics";
@@ -77,6 +77,7 @@ exports.handler = async (event) => {
   }
 
   try {
+    connectLambda(event);
     const count = await incrementCounter(getStore(STORE_NAME));
     return jsonResponse(200, { count });
   } catch (error) {
